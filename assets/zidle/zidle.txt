@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: zidle.obj
+#MaterialFile: zidle.mtl
+#PreviewFile: preview.jpg
+#OtherFiles: zidle.txt
+#DownloadedFromURL:   www.sirall.com
+#DateOfDownload:   4.6.2007
+#CreatedBy:  Michal (Sirall) Èervenka
+#CreatedIn:    3D Studio Max 9
+#UploadedBy: Michal (Sirall) Èervenka
+#Description: Židle s polstrováním (bez textur)
+#NumberOfPolygons: 110

@@ -1,0 +1,32 @@
+﻿  main.cpp
+main.obj : error LNK2019: unresolved external symbol __imp_glutInitWindowSize referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp_glutInitDisplayMode referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp_glutMainLoop referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp_glutSwapBuffers referenced in function "void __cdecl draw(void)" (?draw@@YAXXZ)
+main.obj : error LNK2019: unresolved external symbol __imp_glutDisplayFunc referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp_glutGet referenced in function "void __cdecl init(void)" (?init@@YAXXZ)
+main.obj : error LNK2019: unresolved external symbol __imp___glutInitWithExit referenced in function glutInit_ATEXIT_HACK
+main.obj : error LNK2019: unresolved external symbol __imp___glutCreateWindowWithExit referenced in function glutCreateWindow_ATEXIT_HACK
+main.obj : error LNK2019: unresolved external symbol __imp_glutInitContextVersion referenced in function main
+main.obj : error LNK2019: unresolved external symbol __imp_glutInitContextFlags referenced in function main
+main.obj : error LNK2019: unresolved external symbol "unsigned int __cdecl pgr::createShaderFromSource(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?createShaderFromSource@pgr@@YAIIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function "void __cdecl init(void)" (?init@@YAXXZ)
+main.obj : error LNK2019: unresolved external symbol "unsigned int __cdecl pgr::createProgram(unsigned int const *)" (?createProgram@pgr@@YAIPEBI@Z) referenced in function "void __cdecl init(void)" (?init@@YAXXZ)
+main.obj : error LNK2019: unresolved external symbol "bool __cdecl pgr::initialize(int,int,enum pgr::DebugLevel)" (?initialize@pgr@@YA_NHHW4DebugLevel@1@@Z) referenced in function main
+main.obj : error LNK2019: unresolved external symbol "void __cdecl pgr::dieWithError(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?dieWithError@pgr@@YAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function main
+main.obj : error LNK2001: unresolved external symbol _ptrc_glClear
+main.obj : error LNK2001: unresolved external symbol _ptrc_glClearColor
+main.obj : error LNK2001: unresolved external symbol _ptrc_glEnable
+main.obj : error LNK2001: unresolved external symbol _ptrc_glViewport
+main.obj : error LNK2001: unresolved external symbol _ptrc_glDrawArrays
+main.obj : error LNK2001: unresolved external symbol _ptrc_glBindBuffer
+main.obj : error LNK2001: unresolved external symbol _ptrc_glBufferData
+main.obj : error LNK2001: unresolved external symbol _ptrc_glGenBuffers
+main.obj : error LNK2001: unresolved external symbol _ptrc_glEnableVertexAttribArray
+main.obj : error LNK2001: unresolved external symbol _ptrc_glGetAttribLocation
+main.obj : error LNK2001: unresolved external symbol _ptrc_glUseProgram
+main.obj : error LNK2001: unresolved external symbol _ptrc_glVertexAttribPointer
+main.obj : error LNK2001: unresolved external symbol _ptrc_glBindVertexArray
+main.obj : error LNK2001: unresolved external symbol _ptrc_glGenVertexArrays
+C:\dev\pgr-framework\lib\pgrd.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\dev\pgr-framework\lib\freeglut.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\dev\pgr\Project\x64\Debug\Project.exe : fatal error LNK1120: 28 unresolved externals

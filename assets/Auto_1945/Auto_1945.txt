@@ -1,0 +1,11 @@
+#DownloadModelFormat:	3DS
+#GeometryFile:		Auto_1945.3DS
+#MaterialFile:		Auto_1945.3DS
+#PreviewFile: 		Auto_1945.jpg
+#DownloadedFromURL:	Domaci archiv modelov
+#DateOfDownload:   	14.8.1999
+#CreatedBy:  		Peter Muzikar
+#CreatedIn:    		3D Studio MAX R2
+#UploadedBy: 		Martin Vanko
+#Description: 		Model auta Ford priblizne z roku 1945.
+#NumberOfPolygons: 	11 976

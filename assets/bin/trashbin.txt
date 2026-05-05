@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: trashbin.obj
+#MaterialFile: trashbin.mtl
+#PreviewFile: trashbin.jpg
+#OtherFiles: trashbin.txt, rustbin.jpg
+#DownloadedFromURL: http://o.ffrench.free.fr/meshbank 
+#DateOfDownload: 23.5.2008
+#CreatedBy: Olivier Ffrench
+#CreatedIn: Amapi
+#UploadedBy: Markéta Rejdová
+#Description: Model of trash bin
+#NumberOfPolygons: 5591

@@ -1,0 +1,12 @@
+#DownloadModelFormat: OBJ
+#GeometryFile: stul.obj
+#MaterialFile: stul.mtl
+#PreviewFile: stul.jpg
+#OtherFiles:
+#DownloadedFromURL:   
+#DateOfCreate: 19.5.2007
+#CreatedBy:  Martin Adam
+#CreatedIn:    3D Max
+#UploadedBy: Martin Adam
+#Description: model psaciho stolu
+#NumberOfPolygons: 3888
