@@ -2,75 +2,81 @@
 
 #include "ShaderProgram.hpp"
 
-class DirLight
+namespace skrivrom
 {
-public:
-    glm::vec3 direction;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-
-    void apply(const ShaderProgram::Location& loc) const
+    class DirLight
     {
-        glUniform3fv(loc.dirLight.direction, 1, &direction[0]);
-        glUniform3fv(loc.dirLight.ambient, 1, &ambient[0]);
-        glUniform3fv(loc.dirLight.diffuse, 1, &diffuse[0]);
-        glUniform3fv(loc.dirLight.specular, 1, &specular[0]);
-    }
-};
+    public:
+        glm::vec3 direction;
+        glm::vec3 ambient;
+        glm::vec3 diffuse;
+        glm::vec3 specular;
 
-class PointLight
-{
-public:
-    glm::vec3 position;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
+        void apply(const ShaderProgram::Location& loc) const
+        {
+            glUniform3fv(loc.dirLight.direction, 1, &direction[0]);
+            glUniform3fv(loc.dirLight.ambient, 1, &ambient[0]);
+            glUniform3fv(loc.dirLight.diffuse, 1, &diffuse[0]);
+            glUniform3fv(loc.dirLight.specular, 1, &specular[0]);
+            CHECK_GL_ERROR();
+        }
+    };
 
-    float constant = 1.0f;
-    float linear = 0.09f;
-
-    void apply(const ShaderProgram::Location& loc) const
+    class PointLight
     {
-        glUniform3fv(loc.pointLight.position, 1, &position[0]);
-        glUniform3fv(loc.pointLight.ambient, 1, &ambient[0]);
-        glUniform3fv(loc.pointLight.diffuse, 1, &diffuse[0]);
-        glUniform3fv(loc.pointLight.specular, 1, &specular[0]);
+    public:
+        glm::vec3 position;
+        glm::vec3 ambient;
+        glm::vec3 diffuse;
+        glm::vec3 specular;
 
-        glUniform1f(loc.pointLight.constant, constant);
-        glUniform1f(loc.pointLight.linear, linear);
-    }
-};
+        float constant = 1.0f;
+        float linear = 0.09f;
 
-class SpotLight
-{
-public:
-    glm::vec3 position;
-    glm::vec3 direction;
+        void apply(const ShaderProgram::Location& loc) const
+        {
+            glUniform3fv(loc.pointLight.position, 1, &position[0]);
+            glUniform3fv(loc.pointLight.ambient, 1, &ambient[0]);
+            glUniform3fv(loc.pointLight.diffuse, 1, &diffuse[0]);
+            glUniform3fv(loc.pointLight.specular, 1, &specular[0]);
 
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
+            glUniform1f(loc.pointLight.constant, constant);
+            glUniform1f(loc.pointLight.linear, linear);
+            CHECK_GL_ERROR();
+        }
+    };
 
-    float cutOff;
-    float outerCutOff;
-
-    float constant = 1.0f;
-    float linear = 0.09f;
-
-    void apply(const ShaderProgram::Location& loc) const
+    class SpotLight
     {
-        glUniform3fv(loc.spotLight.position, 1, &position[0]);
-        glUniform3fv(loc.spotLight.direction, 1, &direction[0]);
+    public:
+        glm::vec3 position;
+        glm::vec3 direction;
 
-        glUniform3fv(loc.spotLight.ambient, 1, &ambient[0]);
-        glUniform3fv(loc.spotLight.diffuse, 1, &diffuse[0]);
-        glUniform3fv(loc.spotLight.specular, 1, &specular[0]);
+        glm::vec3 ambient;
+        glm::vec3 diffuse;
+        glm::vec3 specular;
 
-        glUniform1f(loc.spotLight.cutOff, cutOff);
-        glUniform1f(loc.spotLight.outerCutOff, outerCutOff);
+        float cutOff;
+        float outerCutOff;
 
-        glUniform1f(loc.spotLight.constant, constant);
-        glUniform1f(loc.spotLight.linear, linear);
-    }
-};
+        float constant = 1.0f;
+        float linear = 0.09f;
+
+        void apply(const ShaderProgram::Location& loc) const
+        {
+            glUniform3fv(loc.spotLight.position, 1, &position[0]);
+            glUniform3fv(loc.spotLight.direction, 1, &direction[0]);
+
+            glUniform3fv(loc.spotLight.ambient, 1, &ambient[0]);
+            glUniform3fv(loc.spotLight.diffuse, 1, &diffuse[0]);
+            glUniform3fv(loc.spotLight.specular, 1, &specular[0]);
+
+            glUniform1f(loc.spotLight.cutOff, cutOff);
+            glUniform1f(loc.spotLight.outerCutOff, outerCutOff);
+
+            glUniform1f(loc.spotLight.constant, constant);
+            glUniform1f(loc.spotLight.linear, linear);
+            CHECK_GL_ERROR();
+        }
+    };
+}

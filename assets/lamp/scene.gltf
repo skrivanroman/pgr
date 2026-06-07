@@ -1,0 +1,424 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 777,
+      "max": [
+        0.4339917302131653,
+        0.4321761727333069,
+        2.0983729362487793
+      ],
+      "min": [
+        -0.44289520382881165,
+        -0.4447106719017029,
+        0.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 9324,
+      "componentType": 5126,
+      "count": 777,
+      "max": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 777,
+      "max": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9999167919158936,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 777,
+      "max": [
+        0.96037358045578,
+        0.9936647415161133
+      ],
+      "min": [
+        0.018531113862991333,
+        0.010207993909716606
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 2484,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 18648,
+      "componentType": 5126,
+      "count": 271,
+      "max": [
+        0.14958319067955017,
+        0.15022404491901398,
+        0.15086762607097626
+      ],
+      "min": [
+        -0.14958320558071136,
+        -0.14766620099544525,
+        -0.30644169449806213
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 21900,
+      "componentType": 5126,
+      "count": 271,
+      "max": [
+        0.9957343339920044,
+        0.9959098100662231,
+        1.0
+      ],
+      "min": [
+        -0.9957342743873596,
+        -1.0,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 12432,
+      "componentType": 5126,
+      "count": 271,
+      "max": [
+        0.7715609073638916,
+        0.8556001782417297,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.8624528050422668,
+        -0.6829272508621216,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 6216,
+      "componentType": 5126,
+      "count": 271,
+      "max": [
+        0.9900000095367432,
+        0.9896336197853088
+      ],
+      "min": [
+        0.009999999776482582,
+        0.009999999776482582
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 9936,
+      "componentType": 5125,
+      "count": 816,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "MarcHoogkamp (https://sketchfab.com/MarcHoogkamp)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/old-japanese-lamp-2d95746c71724633baf24d8066ecf8db",
+      "title": "Old Japanese Lamp"
+    },
+    "generator": "Sketchfab-12.68.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 13200,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 8384,
+      "byteOffset": 13200,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 25152,
+      "byteOffset": 21584,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 16768,
+      "byteOffset": 46736,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 63504,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/RootNode_baseColor.png"
+    },
+    {
+      "uri": "textures/RootNode_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/RootNode_emissive.png"
+    },
+    {
+      "uri": "textures/RootNode_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveTexture": {
+        "index": 2
+      },
+      "name": "RootNode",
+      "normalTexture": {
+        "index": 3
+      },
+      "occlusionTexture": {
+        "index": 1,
+        "strength": 0.68
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        },
+        "roughnessFactor": 0.6
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "lamp__0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "lightbulb__0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "c123ee0cc3984c98845ad01a4dba071b.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4,
+        5
+      ],
+      "matrix": [
+        6.037766933441162,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.3406535733653606e-15,
+        -6.037766933441162,
+        0.0,
+        0.0,
+        6.037766933441162,
+        1.3406535733653606e-15,
+        0.0,
+        0.0,
+        4.76837158203125e-07,
+        0.0,
+        1.0
+      ],
+      "name": "lamp"
+    },
+    {
+      "mesh": 0,
+      "name": "lamp__0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        0.3469840884208679,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.3469840884208679,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.3469840884208679,
+        0.0,
+        -0.00023656316625420004,
+        -1.2517571916941728e-32,
+        1.2163958549499512,
+        1.0
+      ],
+      "name": "lightbulb"
+    },
+    {
+      "mesh": 1,
+      "name": "lightbulb__0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    }
+  ]
+}

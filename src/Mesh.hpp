@@ -8,35 +8,50 @@
 #include <string>
 #include <vector>
 
-struct Vertex 
+namespace skrivrom
 {
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec2 texCoords;
-};
+	struct Vertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec2 texCoords;
+	};
 
-struct Material
-{
-	glm::vec3 diffuse;
-	glm::vec3 ambient;
-	glm::vec3 specular;
-	float shininess;
-	GLuint texture;
-	bool hasTexture;
-};
+	struct Material
+	{
+		glm::vec3 diffuse;
+		glm::vec3 ambient;
+		glm::vec3 specular;
+		float shininess;
+		GLuint texture = 0;
+		bool hasTexture;
+		float alpha = 1.0f;
 
-class Mesh
-{
-public:
-	Mesh() {}
+		void apply(const ShaderProgram::Location& location) const
+		{
+			glUniform3fv(location.ambient, 1, glm::value_ptr(ambient));
+			glUniform3fv(location.diffuse, 1, glm::value_ptr(diffuse));
+			glUniform3fv(location.specular, 1, glm::value_ptr(specular));
+			glUniform1f(location.shininess, shininess);
+			glUniform1i(location.hasTexture, hasTexture);
+			glUniform1f(location.alpha, alpha);
+		}
+	};
 
-	Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const Material& material, const ShaderProgram::Location& location);
+	// part of the model can have it's own material
+	class Mesh
+	{
+	public:
+		Mesh() {}
 
-	void draw(const ShaderProgram::Location& location) const;
+		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const Material& material, const ShaderProgram::Location& location);
 
-private:
+		void draw(const ShaderProgram::Location& location) const;
 
-	GLuint vao, vertexBuff, indexBuff;
-	uint32_t indices;
-	Material material;
-};
+	private:
+
+		GLuint vao, vertexBuff, indexBuff;
+		uint32_t indices;
+		Material material;
+	};
+}

@@ -1,0 +1,16 @@
+#version 330
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoords;
+
+out vec2 TexCoords;
+
+uniform mat4 model;
+uniform mat4 PV;
+uniform mat4 texTransform;
+
+void main()
+{
+    gl_Position = PV * model * vec4(position, 1.0);
+    
+    TexCoords = (texTransform * vec4(texCoords, 0.0, 1.0)).xy;
+}

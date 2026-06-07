@@ -3,129 +3,134 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-class Camera
+namespace skrivrom
 {
-public:
-	glm::vec3 postion, front, up, worldUp, right;
-	float fov;
-	float speed, moveSpeed;
-	uint32_t winWidth, winHeight;
-
-	Camera(const glm::vec3& position, const glm::vec3& front, float speed, float fov, float winWidth, float winHeight)
+	// camera class for static, free and dynamic cameras
+	class Camera
 	{
-		this->postion = position;
-		this->front = front;
-		this->worldUp = { 0.0f, 1.0f, 0.0f };
-		this->speed = speed;
-		this->moveSpeed = speed * 10.0f;
-		perspective = glm::perspective(glm::radians(fov), winWidth / winHeight, 0.01f, 1000.0f);
-		this->winWidth = winWidth;
-		this->winHeight = winHeight;
-		yaw = -90.0f;
-		pitch = 0.0f;
-		right = glm::normalize(glm::cross(front, worldUp));
-		up = glm::normalize(glm::cross(right, front));
-		ignoreWarp = false;
-	}
+	public:
+		glm::vec3 postion, front, up, worldUp, right;
+		float fov;
+		float speed, moveSpeed;
+		uint32_t winWidth, winHeight;
 
-	void processKeyboard(unsigned char key, int x, int y) {
-		switch (key) 
+		Camera() {}
+
+		Camera(const glm::vec3& position, const glm::vec3& front, float speed, float fov, float winWidth, float winHeight)
 		{
-		case 'w':
-			postion += moveSpeed * front;
-			break;
-		case 's':
-			postion -= moveSpeed * front;
-			break;
-		case 'a':
-			postion -= right * moveSpeed;
-			break;
-		case 'd':
-			postion += right * moveSpeed;
-			break;
-		case 'x':
-			postion += up * moveSpeed;
-			break;
-		case 'z':
-			postion -= up * moveSpeed;
-			break;
-		case 'q':
-		case 27:
-			exit(0);
-			break;
-		}
-
-		glutPostRedisplay(); 
-	}
-
-	void processMouse(int x, int y) {
-		if (ignoreWarp) 
-		{
+			this->postion = position;
+			this->front = front;
+			this->worldUp = { 0.0f, 1.0f, 0.0f };
+			this->speed = speed;
+			this->moveSpeed = speed * 30.0f;
+			this->fov = fov;
+			perspective = glm::perspective(glm::radians(fov), winWidth / winHeight, 0.1f, 3000.0f);
+			this->winWidth = winWidth;
+			this->winHeight = winHeight;
+			yaw = -90.0f;
+			pitch = 0.0f;
+			right = glm::normalize(glm::cross(front, worldUp));
+			up = glm::normalize(glm::cross(right, front));
 			ignoreWarp = false;
-			return;
 		}
 
-		float centerX = winWidth / 2.0f;
-		float centerY = winHeight / 2.0f;
+		void processKeyboard(unsigned char key)
+		{
+			switch (key)
+			{
+			case 'w':
+				postion += moveSpeed * front;
+				break;
+			case 's':
+				postion -= moveSpeed * front;
+				break;
+			case 'a':
+				postion -= right * moveSpeed;
+				break;
+			case 'd':
+				postion += right * moveSpeed;
+				break;
+			case 'x':
+				postion += up * moveSpeed;
+				break;
+			case 'z':
+				postion -= up * moveSpeed;
+				break;
+			}
 
-		float xoffset = x - centerX;
-		float yoffset = centerY - y;
+			glutPostRedisplay();
+		}
 
-		float sensitivity = 0.1f;
-		xoffset *= sensitivity;
-		yoffset *= sensitivity;
+		void processMouse(int x, int y) {
+			if (ignoreWarp)
+			{
+				ignoreWarp = false;
+				return;
+			}
 
-		yaw += xoffset;
-		pitch += yoffset;
+			float centerX = winWidth / 2.0f;
+			float centerY = winHeight / 2.0f;
 
-		if (pitch > 89.0f)
-			pitch = 89.0f;
-		if (pitch < -89.0f)
-			pitch = -89.0f;
+			float xoffset = x - centerX;
+			float yoffset = centerY - y;
 
-		glm::vec3 dir;
-		dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-		dir.y = sin(glm::radians(pitch));
-		dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		front = glm::normalize(dir);
+			float sensitivity = 0.1f;
+			xoffset *= sensitivity;
+			yoffset *= sensitivity;
 
-		right = glm::normalize(glm::cross(front, worldUp));
-		up = glm::normalize(glm::cross(right, front));
+			yaw += xoffset;
+			pitch += yoffset;
 
-		ignoreWarp = true;
-		glutWarpPointer(winWidth / 2, winHeight / 2);
+			if (pitch > 89.0f)
+				pitch = 89.0f;
+			if (pitch < -89.0f)
+				pitch = -89.0f;
 
-		glutPostRedisplay(); 
-	}
+			glm::vec3 dir;
+			dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+			dir.y = sin(glm::radians(pitch));
+			dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+			front = glm::normalize(dir);
 
-	glm::mat4 calculatePV() const
-	{
-		return perspective * glm::lookAt(postion, postion + front, up);
-	}
+			right = glm::normalize(glm::cross(front, worldUp));
+			up = glm::normalize(glm::cross(right, front));
 
-	glm::mat4 getSkyboxPV() const
-	{
-		glm::mat4 view = glm::lookAt(postion, postion + front, up);
-		return perspective * glm::mat4(glm::mat3(view));
-	}
+			ignoreWarp = true;
+			glutWarpPointer(winWidth / 2, winHeight / 2);
 
-	const glm::mat4& getPerspective() const
-	{
-		return perspective;
-	}
+			glutPostRedisplay();
+		}
 
-	void handleResize(uint32_t width, uint32_t height)
-	{
-		float aspect = (float)width / (float)height;
+		glm::mat4 calculatePV() const
+		{
+			return perspective * glm::lookAt(postion, postion + front, up);
+		}
 
-		perspective = glm::perspective(glm::radians(fov), aspect, 0.01f, 1000.0f);
-		winWidth = width;
-		winHeight = height;
-	}
+		glm::mat4 getSkyboxPV() const
+		{
+			glm::mat4 view = glm::lookAt(postion, postion + front, up);
+			return perspective * glm::mat4(glm::mat3(view));
+		}
 
-private:
-	glm::mat4 perspective;
-	float yaw;
-	float pitch;
-	bool ignoreWarp;
-};
+		const glm::mat4& getPerspective() const
+		{
+			return perspective;
+		}
+
+		// new window dimensions
+		void handleResize(uint32_t width, uint32_t height)
+		{
+			float aspect = (float)width / (float)height;
+
+			perspective = glm::perspective(glm::radians(fov), aspect, 0.01f, 1000.0f);
+			winWidth = width;
+			winHeight = height;
+		}
+
+	private:
+		glm::mat4 perspective;
+		float yaw;
+		float pitch;
+		bool ignoreWarp;
+	};
+}

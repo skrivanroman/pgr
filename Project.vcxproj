@@ -74,13 +74,13 @@
     <IncludePath>$(SolutionDir)Vendor;$(PGR_FRAMEWORK_ROOT)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(PGR_FRAMEWORK_ROOT)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Vendor;$(PGR_FRAMEWORK_ROOT)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)Vendor;$(PGR_FRAMEWORK_ROOT)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(PGR_FRAMEWORK_ROOT)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Vendor;$(PGR_FRAMEWORK_ROOT)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -152,20 +152,36 @@
     <ClCompile Include="src\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Bezier.hpp" />
+    <ClInclude Include="src\BSpline.hpp" />
     <ClInclude Include="src\Camera.hpp" />
+    <ClInclude Include="src\Ground.hpp" />
+    <ClInclude Include="src\hardCoded.hpp" />
     <ClInclude Include="src\Lights.hpp" />
     <ClInclude Include="src\Mesh.hpp" />
     <ClInclude Include="src\Model.hpp" />
     <ClInclude Include="src\ShaderProgram.hpp" />
     <ClInclude Include="src\Skybox.hpp" />
+    <ClInclude Include="src\Sprite.hpp" />
     <ClInclude Include="src\utils.hpp" />
+    <ClInclude Include="src\Water.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\shaders\barFrag.glsl" />
+    <None Include="src\shaders\barVert.glsl" />
+    <None Include="src\shaders\oldFragment.glsl" />
+    <None Include="src\shaders\groundFrag.glsl" />
+    <None Include="src\shaders\groundVert.glsl" />
     <None Include="src\shaders\fragment.glsl" />
-    <None Include="src\shaders\newFrag.glsl" />
+    <None Include="src\shaders\simpleFrag.glsl" />
+    <None Include="src\shaders\simpleVert.glsl" />
     <None Include="src\shaders\skyboxFrag.glsl" />
     <None Include="src\shaders\skyboxVert.glsl" />
+    <None Include="src\shaders\spriteFrag.glsl" />
+    <None Include="src\shaders\spriteVert.glsl" />
     <None Include="src\shaders\vertex.glsl" />
+    <None Include="src\shaders\waterFrag.glsl" />
+    <None Include="src\shaders\waterVert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -47,12 +47,30 @@
     <ClInclude Include="src\Lights.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ground.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bezier.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hardCoded.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BSpline.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprite.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Water.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\vertex.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="src\shaders\fragment.glsl">
+    <None Include="src\shaders\oldFragment.glsl">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="src\shaders\skyboxFrag.glsl">
@@ -61,7 +79,37 @@
     <None Include="src\shaders\skyboxVert.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="src\shaders\newFrag.glsl">
+    <None Include="src\shaders\fragment.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\groundFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\groundVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\simpleVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\simpleFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\spriteVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\spriteFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\waterVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\waterFrag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\barVert.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\shaders\barFrag.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
