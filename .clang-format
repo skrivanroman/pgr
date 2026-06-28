@@ -1,0 +1,16 @@
+BasedOnStyle: Google
+
+BreakBeforeBraces: Allman
+
+ColumnLimit: 100
+
+IndentWidth: 2
+UseTab: Never
+
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true

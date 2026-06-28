@@ -3,3 +3,17 @@ Debug/
 Release/
 x64/
 template_BI_PGR_1/
+build/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+Makefile
+.idea/
+cmake-build-debug/
+cmake-build-release/
+
