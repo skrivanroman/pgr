@@ -1,9 +1,0 @@
-﻿  main.cpp
-C:\dev\pgr\Project\src\Camera.hpp(25,20): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-  (compiling source file 'src/main.cpp')
-  
-C:\dev\pgr\Project\src\Camera.hpp(26,21): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-  (compiling source file 'src/main.cpp')
-  
-C:\dev\pgr\Project\src\main.cpp(126,14): warning C4244: 'initializing': conversion from 'float' to 'size_t', possible loss of data
-  Project.vcxproj -> C:\dev\pgr\Project\Debug\Project.exe

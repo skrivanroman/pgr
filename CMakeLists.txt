@@ -25,6 +25,25 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     src/*.h
 )
 
+add_subdirectory(vendor/glfw)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+add_subdirectory(vendor/assimp)
+
+add_library(glad external/glad/src/glad.c)
+target_include_directories(glad PUBLIC external/glad/include)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    glfw
+    glad
+    assimp
+)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    vendor/glm
+    vendor/stb
+)
+
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     ASSET_PATH="${CMAKE_SOURCE_DIR}/assets"
 )
@@ -33,10 +52,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
-
-# If you use GLFW / GLEW / GLAD, uncomment as needed:
-# find_package(glfw3 REQUIRED)
-# target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     -Wall
