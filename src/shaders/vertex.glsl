@@ -1,4 +1,4 @@
-#version 330 core 
+#version 450 core 
 
 in vec3 position;
 in vec3 normal;
@@ -14,7 +14,7 @@ smooth out vec3 FragPos;
 void main()
 {
 	FragPos = vec3(model * vec4(position, 1.0));
-    fTexCoords = texCoords;
-    fNormal = mat3(transpose(inverse(model))) * normal;
-    gl_Position = PV * vec4(FragPos, 1.0);
+  fTexCoords = texCoords;
+  fNormal = mat3(transpose(inverse(model))) * normal;
+  gl_Position = PV * vec4(FragPos, 1.0);
 }

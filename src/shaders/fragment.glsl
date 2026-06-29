@@ -1,4 +1,4 @@
-#version 330 core 
+#version 450 core 
 
 struct DirLight 
 {
@@ -38,7 +38,7 @@ struct Material
 	vec3 specular;
 	float shininess;
 	bool hasTexture;
-    float alpha;
+  float alpha;
 };
 
 in vec2 fTexCoords;

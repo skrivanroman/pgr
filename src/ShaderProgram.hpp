@@ -1,136 +1,243 @@
 #pragma once
 
-#include "pgr.h"
+#include <glad/glad.h>
+
+#include <concepts>
+#include <fstream>
+#include <vector>
 
 namespace skrivrom
 {
-	// contains opengl shader program and it's locations
-	class ShaderProgram
-	{
-	public:
-		struct DirLightLoc
-		{
-			GLint direction;
-			GLint ambient;
-			GLint diffuse;
-			GLint specular;
-		};
+// contains opengl shader program and it's locations
 
-		struct PointLightLoc
-		{
-			GLint position;
-			GLint ambient;
-			GLint diffuse;
-			GLint specular;
-			GLint constant;
-			GLint linear;
-		};
+struct ILocation
+{
+  virtual ~ILocation() = default;
+  virtual void getLocations(GLuint program) = 0;
+};
 
-		struct SpotLightLoc
-		{
-			GLint position;
-			GLint direction;
-			GLint ambient;
-			GLint diffuse;
-			GLint specular;
-			GLint cutOff;
-			GLint outerCutOff;
-			GLint constant;
-			GLint linear;
-		};
+struct DirLightLoc
+{
+  GLint direction;
+  GLint ambient;
+  GLint diffuse;
+  GLint specular;
+};
 
-		struct Location
-		{
-			GLint postion;
-			GLint normal;
-			GLint texCoords;
-			GLint PV;
-			GLint model;
-			GLint ambient;
-			GLint diffuse;
-			GLint specular;
-			GLint shininess;
-			GLint alpha;
-			GLint sampler;
-			GLint sampler2;
-			GLint hasTwoTextures;
-			GLint fogOn;
-			GLint flashlightOn;
-			GLint time;
-			GLint hasTexture;
-			GLint fogTexture;
-			GLint resolution;
-			GLint viewPos;
-			GLint uvScale;
-			GLint uvOffset;
-			GLint texTransform;
-			DirLightLoc dirLight;
-			SpotLightLoc spotLight;
-			PointLightLoc pointLight;
-		};
+struct PointLightLoc
+{
+  GLint position;
+  GLint ambient;
+  GLint diffuse;
+  GLint specular;
+  GLint constant;
+  GLint linear;
+};
 
-		Location location;
+struct SpotLightLoc
+{
+  GLint position;
+  GLint direction;
+  GLint ambient;
+  GLint diffuse;
+  GLint specular;
+  GLint cutOff;
+  GLint outerCutOff;
+  GLint constant;
+  GLint linear;
+};
 
-		ShaderProgram() {}
+struct Location : public ILocation
+{
+  GLint position;
+  GLint normal;
+  GLint texCoords;
+  GLint PV;
+  GLint model;
+  GLint ambient;
+  GLint diffuse;
+  GLint specular;
+  GLint shininess;
+  GLint alpha;
+  GLint sampler;
+  GLint sampler2;
+  GLint hasTwoTextures;
+  GLint fogOn;
+  GLint flashlightOn;
+  GLint time;
+  GLint hasTexture;
+  GLint fogTexture;
+  GLint resolution;
+  GLint viewPos;
+  DirLightLoc dirLight;
+  SpotLightLoc spotLight;
+  PointLightLoc pointLight;
 
-		ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
-		{
-			std::vector<GLuint> shaders;
-			shaders.push_back(pgr::createShaderFromFile(GL_VERTEX_SHADER, vertexPath));
-			shaders.push_back(pgr::createShaderFromFile(GL_FRAGMENT_SHADER, fragmentPath));
+  void getLocations(GLuint program) override
+  {
+    position = glGetAttribLocation(program, "position");
+    normal = glGetAttribLocation(program, "normal");
+    texCoords = glGetAttribLocation(program, "texCoords");
+    PV = glGetUniformLocation(program, "PV");
+    model = glGetUniformLocation(program, "model");
+    ambient = glGetUniformLocation(program, "material.ambient");
+    diffuse = glGetUniformLocation(program, "material.diffuse");
+    specular = glGetUniformLocation(program, "material.specular");
+    shininess = glGetUniformLocation(program, "material.shininess");
+    hasTexture = glGetUniformLocation(program, "material.hasTexture");
+    alpha = glGetUniformLocation(program, "material.alpha");
+    sampler = glGetUniformLocation(program, "sampler");
+    sampler2 = glGetUniformLocation(program, "sampler2");
+    hasTwoTextures = glGetUniformLocation(program, "hasTwoTextures");
+    fogTexture = glGetUniformLocation(program, "fogTexture");
+    resolution = glGetUniformLocation(program, "resolution");
+    viewPos = glGetUniformLocation(program, "viewPos");
+    fogOn = glGetUniformLocation(program, "fogOn");
+    flashlightOn = glGetUniformLocation(program, "flashlightOn");
+    time = glGetUniformLocation(program, "time");
+    dirLight.direction = glGetUniformLocation(program, "dirLight.direction");
+    dirLight.ambient = glGetUniformLocation(program, "dirLight.ambient");
+    dirLight.diffuse = glGetUniformLocation(program, "dirLight.diffuse");
+    dirLight.specular = glGetUniformLocation(program, "dirLight.specular");
+    pointLight.position = glGetUniformLocation(program, "pointLight.position");
+    pointLight.ambient = glGetUniformLocation(program, "pointLight.ambient");
+    pointLight.diffuse = glGetUniformLocation(program, "pointLight.diffuse");
+    pointLight.specular = glGetUniformLocation(program, "pointLight.specular");
+    pointLight.constant = glGetUniformLocation(program, "pointLight.constant");
+    pointLight.linear = glGetUniformLocation(program, "pointLight.linear");
+    spotLight.position = glGetUniformLocation(program, "spotLight.position");
+    spotLight.direction = glGetUniformLocation(program, "spotLight.direction");
+    spotLight.ambient = glGetUniformLocation(program, "spotLight.ambient");
+    spotLight.diffuse = glGetUniformLocation(program, "spotLight.diffuse");
+    spotLight.specular = glGetUniformLocation(program, "spotLight.specular");
+    spotLight.cutOff = glGetUniformLocation(program, "spotLight.cutOff");
+    spotLight.outerCutOff = glGetUniformLocation(program, "spotLight.outerCutOff");
+    spotLight.constant = glGetUniformLocation(program, "spotLight.constant");
+    spotLight.linear = glGetUniformLocation(program, "spotLight.linear");
+  }
+};
 
-			program = pgr::createProgram(shaders);
+struct BarLocation : public ILocation
+{
+  GLint position;
+  GLint texCoords;
+  GLint time;
 
-			location.postion = glGetAttribLocation(program, "position");
-			location.normal = glGetAttribLocation(program, "normal");
-			location.texCoords = glGetAttribLocation(program, "texCoords");
-			location.PV = glGetUniformLocation(program, "PV");
-			location.model = glGetUniformLocation(program, "model");
-			location.ambient = glGetUniformLocation(program, "material.ambient");
-			location.diffuse = glGetUniformLocation(program, "material.diffuse");
-			location.specular = glGetUniformLocation(program, "material.specular");
-			location.shininess = glGetUniformLocation(program, "material.shininess");
-			location.hasTexture = glGetUniformLocation(program, "material.hasTexture");
-			location.alpha = glGetUniformLocation(program, "material.alpha");
-			location.sampler = glGetUniformLocation(program, "sampler");
-			location.sampler2 = glGetUniformLocation(program, "sampler2");
-			location.hasTwoTextures = glGetUniformLocation(program, "hasTwoTextures");
-			location.fogTexture = glGetUniformLocation(program, "fogTexture");
-			location.resolution = glGetUniformLocation(program, "resolution");
-			location.viewPos = glGetUniformLocation(program, "viewPos");
-			location.fogOn = glGetUniformLocation(program, "fogOn");
-			location.flashlightOn = glGetUniformLocation(program, "flashlightOn");
-			location.time = glGetUniformLocation(program, "time");
-			location.uvScale = glGetUniformLocation(program, "uvScale");
-			location.uvOffset = glGetUniformLocation(program, "uvOffset");
-			location.texTransform = glGetUniformLocation(program, "texTransform");
-			location.dirLight.direction = glGetUniformLocation(program, "dirLight.direction");
-			location.dirLight.ambient = glGetUniformLocation(program, "dirLight.ambient");
-			location.dirLight.diffuse = glGetUniformLocation(program, "dirLight.diffuse");
-			location.dirLight.specular = glGetUniformLocation(program, "dirLight.specular");
-			location.pointLight.position = glGetUniformLocation(program, "pointLight.position");
-			location.pointLight.ambient = glGetUniformLocation(program, "pointLight.ambient");
-			location.pointLight.diffuse = glGetUniformLocation(program, "pointLight.diffuse");
-			location.pointLight.specular = glGetUniformLocation(program, "pointLight.specular");
-			location.pointLight.constant = glGetUniformLocation(program, "pointLight.constant");
-			location.pointLight.linear = glGetUniformLocation(program, "pointLight.linear");
-			location.spotLight.position = glGetUniformLocation(program, "spotLight.position");
-			location.spotLight.direction = glGetUniformLocation(program, "spotLight.direction");
-			location.spotLight.ambient = glGetUniformLocation(program, "spotLight.ambient");
-			location.spotLight.diffuse = glGetUniformLocation(program, "spotLight.diffuse");
-			location.spotLight.specular = glGetUniformLocation(program, "spotLight.specular");
-			location.spotLight.cutOff = glGetUniformLocation(program, "spotLight.cutOff");
-			location.spotLight.outerCutOff = glGetUniformLocation(program, "spotLight.outerCutOff");
-			location.spotLight.constant = glGetUniformLocation(program, "spotLight.constant");
-			location.spotLight.linear = glGetUniformLocation(program, "spotLight.linear");
-		}
+  void getLocations(GLuint program) override
+  {
+    position = glGetAttribLocation(program, "position");
+    texCoords = glGetAttribLocation(program, "texCoords");
+    time = glGetUniformLocation(program, "time");
+  }
+};
 
-		void use() const
-		{
-			glUseProgram(program);
-		}
+struct WaterLocation : public ILocation
+{
+  GLint position;
+  GLint texCoords;
+  GLint PV;
+  GLint model;
+  GLint texTransform;
+  GLint sampler;
 
-	private:
-		GLuint program;
-	};
-}
+  void getLocations(GLuint program) override
+  {
+    position = glGetAttribLocation(program, "position");
+    texCoords = glGetAttribLocation(program, "texCoords");
+    sampler = glGetUniformLocation(program, "sampler");
+    PV = glGetUniformLocation(program, "PV");
+    model = glGetUniformLocation(program, "model");
+    texTransform = glGetUniformLocation(program, "texTransform");
+  }
+};
+
+struct SkyboxLocation : public ILocation
+{
+  GLint position;
+  GLint PV;
+  GLint sampler;
+
+  void getLocations(GLuint program) override
+  {
+    position = glGetAttribLocation(program, "position");
+    sampler = glGetUniformLocation(program, "sampler");
+    PV = glGetUniformLocation(program, "PV");
+  }
+};
+
+struct SpriteLocation : public ILocation
+{
+  GLint PV;
+  GLint model;
+  GLint spriteTexture;
+  GLint uvScale;
+  GLint uvOffset;
+
+  void getLocations(GLuint program) override
+  {
+    spriteTexture = glGetUniformLocation(program, "spriteTexture");
+    PV = glGetUniformLocation(program, "PV");
+    model = glGetUniformLocation(program, "model");
+    uvScale = glGetUniformLocation(program, "uvScale");
+    uvOffset = glGetUniformLocation(program, "uvOffset");
+  }
+};
+
+template <std::derived_from<ILocation> L>
+class ShaderProgram
+{
+ public:
+  L location;
+
+  ShaderProgram() = default;
+
+  ShaderProgram(const ShaderProgram&) = delete;
+  ShaderProgram& operator=(const ShaderProgram&) = delete;
+  ShaderProgram(ShaderProgram&&) = default;
+  ShaderProgram& operator=(ShaderProgram&&) = default;
+
+  ShaderProgram(const std::string& vertexPath, const std::string& fragmentPath)
+  {
+    std::string vertexCode = loadShaderCode(vertexPath);
+    const char* vertexCodeChar = vertexCode.c_str();
+    GLuint vertexHandle = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &vertexCodeChar);
+
+    std::string fragCode = loadShaderCode(vertexPath);
+    const char* fragCodeChar = fragCode.c_str();
+    GLuint fragHandle = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &fragCodeChar);
+
+    program = glCreateProgram();
+    glAttachShader(program, vertexHandle);
+    glAttachShader(program, fragHandle);
+
+    location.getLocations(program);
+    glUseProgram(0);
+  }
+
+  ~ShaderProgram()
+  {
+    glDeleteProgram(program);
+  }
+
+  void use() const
+  {
+    glUseProgram(program);
+  }
+
+ private:
+  std::string loadShaderCode(const std::string& path)
+  {
+    std::ifstream shaderFile(path, std::ios::ate | std::ios::binary);
+    size_t size = static_cast<size_t>(shaderFile.tellg());
+    std::vector<char> data(size);
+
+    shaderFile.seekg(0);
+    shaderFile.read(data.data(), size);
+
+    std::string str(data.data());
+    return str;
+  }
+
+  GLuint program;
+};
+}  // namespace skrivrom

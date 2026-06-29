@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
-project(pgr LANGUAGES CXX)
+project(pgr LANGUAGES C CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -28,9 +29,18 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 add_subdirectory(vendor/glfw)
+target_compile_options(glfw PRIVATE
+    -w
+)
+
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
 add_subdirectory(vendor/assimp)
+target_compile_options(assimp PRIVATE
+    -w
+)
 
 add_library(glad vendor/glad/src/glad.c)
 target_include_directories(glad PUBLIC vendor/glad/include)
@@ -41,13 +51,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     assimp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     vendor/glm
     vendor/stb
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     ASSET_PATH="${CMAKE_SOURCE_DIR}/assets"
+    SHADER_PATH="${CMAKE_SOURCE_DIR}/src/shaders"
 )
 
 find_package(OpenGL REQUIRED)
@@ -90,5 +101,3 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
         -ffast-math
     )
 endif()
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
