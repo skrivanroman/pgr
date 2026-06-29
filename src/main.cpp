@@ -1,7 +1,7 @@
 #define GLM_FORCE_RADIANS
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include <fstream>
 #include <glm/glm.hpp>
@@ -17,7 +17,6 @@
 #include "Skybox.hpp"
 #include "Sprite.hpp"
 #include "Water.hpp"
-#include "hardCoded.hpp"
 #include "utils.hpp"
 
 namespace skrivrom
@@ -173,9 +172,6 @@ void update(int value)
 
   sprite.update(8.0f / 1000.0f);
 
-  glutPostRedisplay();
-
-  glutTimerFunc(16, update, 0);
 }
 
 void reshape(GLFWwindow* _, int width, int height)
@@ -238,11 +234,11 @@ void init()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_FRAMEBUFFER_SRGB);
 
-  program = ShaderProgram(getShader("vertex.glsl"), getShader("fragment.glsl"));
-  skyboxProgram = ShaderProgram(getShader("skyboxVert.glsl"), getShader("skyboxFrag.glsl"));
-  spriteProgram = ShaderProgram(getShader("spriteVert.glsl"), getShader("spriteFrag.glsl"));
-  waterProgram = ShaderProgram(getShader("waterVert.glsl"), getShader("waterFrag.glsl"));
-  barProgram = ShaderProgram(getShader("barVert.glsl"), getShader("barFrag.glsl"));
+  program = ShaderProgram<Location>(getShader("vertex.glsl"), getShader("fragment.glsl"));
+  skyboxProgram = ShaderProgram<SkyboxLocation>(getShader("skyboxVert.glsl"), getShader("skyboxFrag.glsl"));
+  spriteProgram = ShaderProgram<SpriteLocation>(getShader("spriteVert.glsl"), getShader("spriteFrag.glsl"));
+  waterProgram = ShaderProgram<WaterLocation>(getShader("waterVert.glsl"), getShader("waterFrag.glsl"));
+  barProgram = ShaderProgram<BarLocation>(getShader("barVert.glsl"), getShader("barFrag.glsl"));
   // groundProgram = ShaderProgram(getShaderDir() + "groundVert.glsl", getShaderDir() +
   // "groundFrag.glsl");
 
@@ -259,15 +255,15 @@ void init()
   lamp.transform.position = glm::vec3(-75.0f, 7.0f, 20.0f);
   lamp.transform.scale *= 5.0f;
 
-  bin = Model("bin\\trashbin.obj", program.location);
+  bin = Model(getAsset("bin\\trashbin.obj"), program.location);
   bin.transform.position = glm::vec3(35.0f, 2.0f, 50.0f);
   bin.transform.scale *= 0.5f;
 
-  arcade = Model("arcade\\scene.gltf", program.location);
+  arcade = Model(getAsset("arcade\\scene.gltf"), program.location);
   arcade.transform.position = glm::vec3(160.0f, 10.0f, -90.0f);
   arcade.transform.scale *= 20.0f;
 
-  sprite = AnimatedSprite("sprites\\idle.png", getAssetDir() + "sprites\\run.png", 5, 5, 10.0f);
+  sprite = AnimatedSprite(getAsset("sprites\\idle.png"), getAsset("sprites\\run.png"), 5, 5, 10.0f);
   sprite.transform.scale *= 45.0f;
   sprite.transform.position = glm::vec3(160.0f, 95.5f, -90.5f);
   sprite.transform.rotation = glm::angleAxis(glm::radians(-15.0f), glm::vec3(1, 0, 0));
@@ -278,11 +274,11 @@ void init()
   bikeMat.specular = glm::vec3(1.0f, 1.0f, 1.0f);
   bikeMat.shininess = 128.0f;
 
-  bike = Model("hover_bike\\scene.gltf", program.location, bikeMat);
+  bike = Model(getAsset("hover_bike\\scene.gltf"), program.location, bikeMat);
   bike.transform.position = glm::vec3(30.0f, 2.0f, 30.0f);
   bike.transform.scale *= 0.2f;
 
-  flashlight = Model("flashlight\\scene.gltf", program.location);
+  flashlight = Model(getAsset("flashlight\\scene.gltf"), program.location);
   flashlight.transform.position = glm::vec3(15.0f, 6.0f, 40.0f);
   flashlight.transform.scale *= 20.0f;
 
@@ -296,11 +292,11 @@ void init()
   // rock.transform.position = glm::vec3(30.0f, 1.0f, 220.0f);
   // rock.transform.scale *= 5.0f;
 
-  rock2 = Model("rock2\\scene.gltf", program.location, rockMat);
+  rock2 = Model(getAsset("rock2\\scene.gltf"), program.location, rockMat);
   rock2.transform.position = glm::vec3(30.0f, 10.0f, 220.0f);
   rock2.transform.scale *= 60.0f;
 
-  rock3 = Model("rock3\\scene.gltf", program.location, rockMat);
+  rock3 = Model(getAsset("rock3\\scene.gltf"), program.location, rockMat);
   rock3.transform.position = glm::vec3(-200.0f, 20.0f, 220.0f);
   rock3.transform.scale *= 2000.0f;
 
@@ -310,15 +306,15 @@ void init()
   treeMat.specular = glm::vec3(0.0f, 0.0f, 0.0f);
   treeMat.shininess = 1.0f;
 
-  tree = Model("tree\\scene.gltf", program.location, treeMat);
+  tree = Model(getAsset("tree\\scene.gltf"), program.location, treeMat);
   tree.transform.position = glm::vec3(-150.0f, 5.0f, 400.0f);
   tree.transform.scale *= 13.0f;
 
-  tree2 = Model("tree2\\scene.gltf", program.location, treeMat);
+  tree2 = Model(getAsset("tree2\\scene.gltf"), program.location, treeMat);
   tree2.transform.position = glm::vec3(50.0f, 5.0f, 420.0f);
   tree2.transform.scale *= 15.0f;
 
-  maple = Model("maple\\scene.gltf", program.location, treeMat);
+  maple = Model(getAsset("maple\\scene.gltf"), program.location, treeMat);
   maple.transform.position = glm::vec3(180.0f, -5.0f, 300.0f);
   maple.transform.scale *= 1.0f;
 
@@ -329,11 +325,11 @@ void init()
   glassMat.shininess = 128.0f;
   glassMat.alpha = 0.3f;
 
-  glass = Model("glass\\scene.gltf", program.location, glassMat);
+  glass = Model(getAsset("glass\\scene.gltf"), program.location, glassMat);
   glass.transform.position = glm::vec3(50.0f, 3.0f, 20.0f);
   glass.transform.scale *= 100.0f;
 
-  glass2 = Model("glass2\\scene.gltf", program.location, glassMat);
+  glass2 = Model(getAsset("glass2\\scene.gltf"), program.location, glassMat);
   glass2.transform.position = glm::vec3(10.0f, 5.0f, 20.0f);
   glass2.transform.scale *= 5.0f;
 
@@ -345,36 +341,23 @@ void init()
 
   setupSimpleMesh();
 
-  fogTexture = pgr::createTexture(getAssetDir() + "fog\\smoke4.jpg");
+  fogTexture = loadSRGBTexture(getAsset( "fog\\smoke4.jpg"));
 
-  water = Water(glm::vec3(500.0f, 3.0f, -100.0f), 120.0f, "water\\pool.jpg");
+  water = Water(glm::vec3(500.0f, 3.0f, -100.0f), 120.0f, getAsset("water\\pool.jpg"));
 
   std::vector<std::string> faces = {
       "rt", "lf", "up", "dn", "bk", "ft",
   };
-  skybox = Skybox("skybox\\s1_", faces);
-  skybox2 = Skybox("skybox\\s2_", faces);
+  skybox = Skybox(getAsset("skybox\\s1_"), faces);
+  skybox2 = Skybox(getAsset("skybox\\s2_"), faces);
 
   ground =
-      Ground(10000.0f, 1, 40, program.location, "ground\\textures\\forest_ground_04_diff_4k.jpg",
-             "rocks\\textures\\coast_sand_rocks_02_diff_4k.jpg");
+      Ground(10000.0f, 1, 40, program.location, getAsset("ground\\textures\\forest_ground_04_diff_4k.jpg"),
+            getAsset("rocks\\textures\\coast_sand_rocks_02_diff_4k.jpg"));
 
   setupLights();
-  glutTimerFunc(0, update, 0);
 }
 
-// draw hardcoded mesh
-void drawSimpleMesh()
-{
-  simpleProgram.use();
-  glm::mat4 PV = camera->calculatePV();
-  glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f) * 10.0f);
-  model = glm::translate(model, glm::vec3(50.0f, 0.0f, 50.0f));
-  glUniformMatrix4fv(simpleProgram.location.PV, 1, GL_FALSE, glm::value_ptr(PV));
-  glUniformMatrix4fv(simpleProgram.location.model, 1, GL_FALSE, glm::value_ptr(model));
-
-  drawHardCoded();
-}
 
 void drawSkybox(const Skybox& currentSkybox)
 {
@@ -392,7 +375,7 @@ void drawSkybox(const Skybox& currentSkybox)
 }
 
 // used for ui
-void drawFullScreenQuad(const ShaderProgram::Location& location)
+void drawFullScreenQuad(const BarLocation& location)
 {
   static GLuint quadVAO = 0;
   static GLuint quadVBO = 0;
@@ -411,8 +394,8 @@ void drawFullScreenQuad(const ShaderProgram::Location& location)
     glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(location.postion);
-    glVertexAttribPointer(location.postion, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(location.position);
+    glVertexAttribPointer(location.position, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 
     glEnableVertexAttribArray(location.texCoords);
     glVertexAttribPointer(location.texCoords, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
@@ -434,7 +417,7 @@ void draw()
   glm::mat4 model = glm::mat4(1.0f);
   glm::mat4 PV = camera->calculatePV();
 
-  bool isDay = ((glutGet(GLUT_ELAPSED_TIME) % DAY_DURATION) < (DAY_DURATION / 2));
+  bool isDay = (((uint32_t)(1000 *glfwGetTime()) % DAY_DURATION) < (DAY_DURATION / 2));
   if (isDay)
   {
     drawSkybox(skybox);
@@ -444,12 +427,11 @@ void draw()
     drawSkybox(skybox2);
   }
 
-  drawSimpleMesh();
 
   glEnable(GL_STENCIL_TEST);
   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-  float currentTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+  float currentTime = glfwGetTime();
   waterProgram.use();
   glUniformMatrix4fv(waterProgram.location.PV, 1, GL_FALSE, glm::value_ptr(PV));
   glUniform1i(waterProgram.location.sampler, 0);
@@ -468,7 +450,6 @@ void draw()
   glUniform1i(program.location.hasTwoTextures, false);
   glUniform1i(program.location.fogOn, fogOn);
   glUniform1i(program.location.flashlightOn, flashlightOn);
-  CHECK_GL_ERROR();
 
   spotLight.position = camera->postion;
   spotLight.direction = camera->front;
@@ -552,7 +533,7 @@ void draw()
   glDisable(GL_DEPTH_TEST);
 
   barProgram.use();
-  float currentTimeMilli = static_cast<float>(glutGet(GLUT_ELAPSED_TIME));
+  float currentTimeMilli = static_cast<float>(glfwGetTime() * 1000);
   glUniform1f(barProgram.location.time, currentTimeMilli);
 
   drawFullScreenQuad(barProgram.location);
@@ -601,8 +582,6 @@ void draw()
 
     clickPending = false;
   }
-  CHECK_GL_ERROR();
-  glutSwapBuffers();
 }
 
 void onMouse(int x, int y)
@@ -674,7 +653,7 @@ void ExitProgram()
   trans.push_back(&house.transform);
   trans.push_back(&arcade.transform);
   trans.push_back(&rock2.transform);
-  saveConfig(getAssetDir() + "config.txt", trans);
+  saveConfig(getAsset("config.txt"), trans);
   exit(0);
 }
 
@@ -732,7 +711,7 @@ void processInput()
     trans.push_back(&house.transform);
     trans.push_back(&arcade.transform);
     trans.push_back(&rock2.transform);
-    loadConfig(getAssetDir() + "\\config.txt", trans);
+    loadConfig(getAsset("\\config.txt"), trans);
   }
 
   const int CTRL_E = 5;
@@ -861,7 +840,7 @@ int main(int argc, char** argv)
 
   glfwWindowHint(GLFW_SAMPLES, 4);
 
-  GLFWwindow* window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE, nullptr, nullptr);
+  GLFWwindow* window = glfwCreateWindow(skrivrom::WIN_WIDTH, skrivrom::WIN_HEIGHT, skrivrom::WIN_TITLE, nullptr, nullptr);
 
   if (!window)
   {
@@ -891,6 +870,14 @@ int main(int argc, char** argv)
   glViewport(0, 0, width, height);
 
   std::cout << "Starting render loop!" << std::endl;
+
+  while (!glfwWindowShouldClose(window))
+  {
+    skrivrom::draw();
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+  }
 
   glfwDestroyWindow(window);
   glfwTerminate();

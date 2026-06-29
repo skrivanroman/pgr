@@ -1,6 +1,7 @@
 #include "Model.hpp"
 
 #include <iostream>
+#include "utils.hpp"
 
 namespace skrivrom
 {
@@ -162,7 +163,7 @@ Mesh Model::processMesh(const aiMesh* mesh, const aiScene* scene, const Location
     if (!alreadyLoaded)
     {
       std::cout << "Loading texture file: " << name.data << '\n';
-      material.texture = pgr::createTexture(texturePath);
+      material.texture = loadSRGBTexture(texturePath);
       material.hasTexture = true;
 
       textures.push_back(Texture{.id = material.texture, .path = texturePath});

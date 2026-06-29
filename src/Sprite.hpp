@@ -2,7 +2,7 @@
 
 #include "Model.hpp"
 #include <string>
-#include <iostream>
+#include "utils.hpp"
 
 namespace skrivrom
 {
@@ -22,8 +22,8 @@ namespace skrivrom
         AnimatedSprite(const std::string& path1, const std::string& path2, uint32_t rows, uint32_t cols, float speed = 15.0f)
             : rows(rows), cols(cols), animationSpeed(speed)
         {
-            texture1 = pgr::createTexture(path1);
-            texture2 = pgr::createTexture(path2);
+            texture1 = loadSRGBTexture(path1);
+            texture2 = loadSRGBTexture(path2);
 
             firstActive = true;
             time = 0.0f;
@@ -38,7 +38,7 @@ namespace skrivrom
             currFrame = static_cast<int>(time * animationSpeed) % totalFrames;
         }
 
-        void draw(const ShaderProgram::Location& location)
+        void draw(const SpriteLocation& location)
         {
             glBindVertexArray(vao);
 
@@ -65,7 +65,6 @@ namespace skrivrom
             glBindVertexArray(0);
             glBindTexture(GL_TEXTURE_2D, 0);
 
-            CHECK_GL_ERROR();
         }
 
         void toggleState()

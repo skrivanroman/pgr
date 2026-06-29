@@ -189,10 +189,10 @@ class ShaderProgram
  public:
   L location;
 
-  ShaderProgram() = default;
+  ShaderProgram() : program(0) {};
 
-  ShaderProgram(const ShaderProgram&) = delete;
-  ShaderProgram& operator=(const ShaderProgram&) = delete;
+  ShaderProgram(const ShaderProgram&) = default;
+  ShaderProgram& operator=(const ShaderProgram&) = default;
   ShaderProgram(ShaderProgram&&) = default;
   ShaderProgram& operator=(ShaderProgram&&) = default;
 

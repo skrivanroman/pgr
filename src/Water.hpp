@@ -4,6 +4,7 @@
 #include <cmath>
 #include "ShaderProgram.hpp"
 #include "Model.hpp"
+#include "utils.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -24,14 +25,14 @@ namespace skrivrom
         {
             generateIrregularDisk(5, 30, 4.0f);
 
-            textureHandle = pgr::createTexture(texturePath);
+            textureHandle = loadSRGBTexture(texturePath);
             glBindTexture(GL_TEXTURE_2D, textureHandle);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glBindTexture(GL_TEXTURE_2D, 0);
         }
 
-        void draw(const ShaderProgram::Location& location, float time) const
+        void draw(const WaterLocation& location, float time) const
         {
             glm::mat4 model = glm::translate(glm::mat4(1.0f), position);
             glUniformMatrix4fv(location.model, 1, GL_FALSE, glm::value_ptr(model));
@@ -52,7 +53,6 @@ namespace skrivrom
 
             glBindVertexArray(0);
 
-            CHECK_GL_ERROR();
         }
     private:
 

@@ -4,6 +4,7 @@ Release/
 x64/
 template_BI_PGR_1/
 build/
+.cache/
 *.sln
 *.vcxproj
 *.vcxproj.filters
