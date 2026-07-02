@@ -4,6 +4,7 @@
 
 #include <concepts>
 #include <fstream>
+#include <iostream>
 #include <vector>
 
 namespace skrivrom
@@ -200,23 +201,23 @@ class ShaderProgram
   {
     std::string vertexCode = loadShaderCode(vertexPath);
     const char* vertexCodeChar = vertexCode.c_str();
-    GLuint vertexHandle = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &vertexCodeChar);
+    GLuint vertexHandle = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexHandle, 1, &vertexCodeChar, nullptr);
+    glCompileShader(vertexHandle);
 
-    std::string fragCode = loadShaderCode(vertexPath);
+    std::string fragCode = loadShaderCode(fragmentPath);
     const char* fragCodeChar = fragCode.c_str();
-    GLuint fragHandle = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &fragCodeChar);
+    GLuint fragHandle = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragHandle, 1, &fragCodeChar, nullptr);
+    glCompileShader(fragHandle);
 
     program = glCreateProgram();
     glAttachShader(program, vertexHandle);
     glAttachShader(program, fragHandle);
+    glLinkProgram(program);
 
     location.getLocations(program);
     glUseProgram(0);
-  }
-
-  ~ShaderProgram()
-  {
-    glDeleteProgram(program);
   }
 
   void use() const
@@ -228,14 +229,19 @@ class ShaderProgram
   std::string loadShaderCode(const std::string& path)
   {
     std::ifstream shaderFile(path, std::ios::ate | std::ios::binary);
+    if (!shaderFile.is_open())
+    {
+      std::cerr << "Can't open file: " << path << '\n';
+      return "";
+    }
+
     size_t size = static_cast<size_t>(shaderFile.tellg());
     std::vector<char> data(size);
 
     shaderFile.seekg(0);
     shaderFile.read(data.data(), size);
 
-    std::string str(data.data());
-    return str;
+    return {data.begin(), data.end()};
   }
 
   GLuint program;

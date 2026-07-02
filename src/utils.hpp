@@ -1,13 +1,12 @@
 #pragma once
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
 #include <stb_image.h>
 
 #include <iostream>
 #include <string>
 
-GLuint loadSRGBTexture(const std::string& path)
+inline GLuint loadSRGBTexture(const std::string& path)
 {
   int width, height, channels;
 
@@ -26,12 +25,12 @@ GLuint loadSRGBTexture(const std::string& path)
   if (channels == 3)
   {
     format = GL_RGB;
-    internalFormat = GL_SRGB8;  // ✅ sRGB
+    internalFormat = GL_SRGB;
   }
   else if (channels == 4)
   {
     format = GL_RGBA;
-    internalFormat = GL_SRGB8_ALPHA8;  // ✅ sRGB + alpha
+    internalFormat = GL_SRGB_ALPHA;
   }
   else
   {
@@ -100,16 +99,16 @@ std::string getShaderDir()
 namespace skrivrom
 {
 
-std::string getAsset(const std::string& itemPath)
+inline std::string getAsset(const std::string& itemPath)
 {
   std::string path(ASSET_PATH);
-  return path + itemPath;
+  return path + '/' + itemPath;
 }
 
-std::string getShader(const std::string& itemPath)
+inline std::string getShader(const std::string& itemPath)
 {
   std::string path(SHADER_PATH);
-  return path + itemPath;
+  return path + '/' + itemPath;
 }
 
 }  // namespace skrivrom

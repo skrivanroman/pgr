@@ -122,20 +122,20 @@ vec3 calcSpotLight(SpotLight light, vec3 norm, vec3 fragPos, vec3 viewDir, vec3 
 
 void main()
 {
-    float gamma = 2.2;
 
     vec3 baseColor = material.diffuse;
 
     float alpha = material.alpha;
     if (material.hasTexture) 
     {
-		baseColor = texture(sampler, fTexCoords).rgb;
-        alpha = texture(sampler, fTexCoords).a;
-		if (hasTwoTextures)
-		{
-			vec3 secondColor = texture(sampler2, fTexCoords).rgb;
-			baseColor = mix(baseColor, secondColor, 0.8);
-		}
+      baseColor = texture(sampler, fTexCoords).rgb;
+      alpha = texture(sampler, fTexCoords).a;
+
+      if (hasTwoTextures)
+      {
+        vec3 secondColor = texture(sampler2, fTexCoords).rgb;
+        baseColor = mix(baseColor, secondColor, 0.8);
+      }
     }
 
     if(alpha < 0.1)
@@ -183,7 +183,6 @@ void main()
 		result = mix(fogColor, result, fogFactor);
         */
     }
-    result = pow(result, vec3(1.0 / gamma));
 
     color = vec4(result, alpha);
 }

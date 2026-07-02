@@ -1,11 +1,11 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <stb_image.h>
 
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <stb_image.h>
 
 namespace skrivrom
 {

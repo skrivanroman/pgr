@@ -24,7 +24,7 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& ind
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(location.position);
-  glVertexAttribPointer(location.postion, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+  glVertexAttribPointer(location.position, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 
   glEnableVertexAttribArray(location.normal);
   glVertexAttribPointer(location.normal, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),

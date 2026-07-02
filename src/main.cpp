@@ -1,8 +1,10 @@
 #define GLM_FORCE_RADIANS
+#define GLFW_INCLUDE_NONE
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
+#include <chrono>
 #include <fstream>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -19,9 +21,48 @@
 #include "Water.hpp"
 #include "utils.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 namespace skrivrom
 {
-// current size of the window in pixels
+
+inline const char* GLErrorToString(GLenum error)
+{
+  switch (error)
+  {
+    case GL_NO_ERROR:
+      return "GL_NO_ERROR";
+    case GL_INVALID_ENUM:
+      return "GL_INVALID_ENUM";
+    case GL_INVALID_VALUE:
+      return "GL_INVALID_VALUE";
+    case GL_INVALID_OPERATION:
+      return "GL_INVALID_OPERATION";
+    case GL_STACK_OVERFLOW:
+      return "GL_STACK_OVERFLOW";
+    case GL_STACK_UNDERFLOW:
+      return "GL_STACK_UNDERFLOW";
+    case GL_OUT_OF_MEMORY:
+      return "GL_OUT_OF_MEMORY";
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+      return "GL_INVALID_FRAMEBUFFER_OPERATION";
+    default:
+      return "Unknown OpenGL error";
+  }
+}
+
+#define GL_CHECK_ERROR()                                                                 \
+  do                                                                                     \
+  {                                                                                      \
+    GLenum err = glGetError();                                                           \
+    if (err != GL_NO_ERROR)                                                              \
+    {                                                                                    \
+      std::cerr << __FILE__ << ":" << __LINE__ << ": " << GLErrorToString(err) << " (0x" \
+                << std::hex << err << std::dec << ")\n";                                 \
+    }                                                                                    \
+  } while (0)
+
 uint32_t WIN_WIDTH = 512 * 2;
 uint32_t WIN_HEIGHT = 512 * 2;
 const char* WIN_TITLE = "PGR";
@@ -142,12 +183,8 @@ bool checkAllCollisions(const glm::vec3& positionToCheck)
   return false;
 }
 
-void processInput();
-
-void update(int value)
+void update(float deltaTime)
 {
-  processInput();
-
   if (bikeMove)
   {
     bezierCtr += 0.005f;
@@ -171,7 +208,6 @@ void update(int value)
   spline.moveCamera(dynCamera2, splineCtr);
 
   sprite.update(8.0f / 1000.0f);
-
 }
 
 void reshape(GLFWwindow* _, int width, int height)
@@ -234,36 +270,41 @@ void init()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_FRAMEBUFFER_SRGB);
 
+  GL_CHECK_ERROR();
   program = ShaderProgram<Location>(getShader("vertex.glsl"), getShader("fragment.glsl"));
-  skyboxProgram = ShaderProgram<SkyboxLocation>(getShader("skyboxVert.glsl"), getShader("skyboxFrag.glsl"));
-  spriteProgram = ShaderProgram<SpriteLocation>(getShader("spriteVert.glsl"), getShader("spriteFrag.glsl"));
-  waterProgram = ShaderProgram<WaterLocation>(getShader("waterVert.glsl"), getShader("waterFrag.glsl"));
+  skyboxProgram =
+      ShaderProgram<SkyboxLocation>(getShader("skyboxVert.glsl"), getShader("skyboxFrag.glsl"));
+  spriteProgram =
+      ShaderProgram<SpriteLocation>(getShader("spriteVert.glsl"), getShader("spriteFrag.glsl"));
+  waterProgram =
+      ShaderProgram<WaterLocation>(getShader("waterVert.glsl"), getShader("waterFrag.glsl"));
   barProgram = ShaderProgram<BarLocation>(getShader("barVert.glsl"), getShader("barFrag.glsl"));
   // groundProgram = ShaderProgram(getShaderDir() + "groundVert.glsl", getShaderDir() +
   // "groundFrag.glsl");
 
+  GL_CHECK_ERROR();
   Material houseMat;
   houseMat.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
   houseMat.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
   houseMat.specular = glm::vec3(0.1f, 0.1f, 0.1f);
   houseMat.shininess = 16.0f;
-  house = Model(getAsset("house\\scene.gltf"), program.location, houseMat);
+  house = Model(getAsset("house/scene.gltf"), program.location, houseMat);
   house.transform.position = glm::vec3(0.0f, 5.0f, -200.0f);
   house.transform.scale *= 50.0f;
 
-  lamp = Model(getAsset("lamp\\scene.gltf"), program.location);
+  lamp = Model(getAsset("lamp/scene.gltf"), program.location);
   lamp.transform.position = glm::vec3(-75.0f, 7.0f, 20.0f);
   lamp.transform.scale *= 5.0f;
 
-  bin = Model(getAsset("bin\\trashbin.obj"), program.location);
+  bin = Model(getAsset("bin/trashbin.obj"), program.location);
   bin.transform.position = glm::vec3(35.0f, 2.0f, 50.0f);
   bin.transform.scale *= 0.5f;
 
-  arcade = Model(getAsset("arcade\\scene.gltf"), program.location);
+  arcade = Model(getAsset("arcade/scene.gltf"), program.location);
   arcade.transform.position = glm::vec3(160.0f, 10.0f, -90.0f);
   arcade.transform.scale *= 20.0f;
 
-  sprite = AnimatedSprite(getAsset("sprites\\idle.png"), getAsset("sprites\\run.png"), 5, 5, 10.0f);
+  sprite = AnimatedSprite(getAsset("sprites/idle.png"), getAsset("sprites/run.png"), 5, 5, 10.0f);
   sprite.transform.scale *= 45.0f;
   sprite.transform.position = glm::vec3(160.0f, 95.5f, -90.5f);
   sprite.transform.rotation = glm::angleAxis(glm::radians(-15.0f), glm::vec3(1, 0, 0));
@@ -274,11 +315,11 @@ void init()
   bikeMat.specular = glm::vec3(1.0f, 1.0f, 1.0f);
   bikeMat.shininess = 128.0f;
 
-  bike = Model(getAsset("hover_bike\\scene.gltf"), program.location, bikeMat);
+  bike = Model(getAsset("hover_bike/scene.gltf"), program.location, bikeMat);
   bike.transform.position = glm::vec3(30.0f, 2.0f, 30.0f);
   bike.transform.scale *= 0.2f;
 
-  flashlight = Model(getAsset("flashlight\\scene.gltf"), program.location);
+  flashlight = Model(getAsset("flashlight/scene.gltf"), program.location);
   flashlight.transform.position = glm::vec3(15.0f, 6.0f, 40.0f);
   flashlight.transform.scale *= 20.0f;
 
@@ -288,15 +329,15 @@ void init()
   rockMat.specular = glm::vec3(0.05f, 0.05f, 0.05f);
   rockMat.shininess = 8.0f;
 
-  // rock = Model(getAssetDir() + "rock\\scene.obj", program.location);
+  // rock = Model(getAssetDir() + "rock/scene.obj", program.location);
   // rock.transform.position = glm::vec3(30.0f, 1.0f, 220.0f);
   // rock.transform.scale *= 5.0f;
 
-  rock2 = Model(getAsset("rock2\\scene.gltf"), program.location, rockMat);
+  rock2 = Model(getAsset("rock2/scene.gltf"), program.location, rockMat);
   rock2.transform.position = glm::vec3(30.0f, 10.0f, 220.0f);
   rock2.transform.scale *= 60.0f;
 
-  rock3 = Model(getAsset("rock3\\scene.gltf"), program.location, rockMat);
+  rock3 = Model(getAsset("rock3/scene.gltf"), program.location, rockMat);
   rock3.transform.position = glm::vec3(-200.0f, 20.0f, 220.0f);
   rock3.transform.scale *= 2000.0f;
 
@@ -306,15 +347,15 @@ void init()
   treeMat.specular = glm::vec3(0.0f, 0.0f, 0.0f);
   treeMat.shininess = 1.0f;
 
-  tree = Model(getAsset("tree\\scene.gltf"), program.location, treeMat);
+  tree = Model(getAsset("tree/scene.gltf"), program.location, treeMat);
   tree.transform.position = glm::vec3(-150.0f, 5.0f, 400.0f);
   tree.transform.scale *= 13.0f;
 
-  tree2 = Model(getAsset("tree2\\scene.gltf"), program.location, treeMat);
+  tree2 = Model(getAsset("tree2/scene.gltf"), program.location, treeMat);
   tree2.transform.position = glm::vec3(50.0f, 5.0f, 420.0f);
   tree2.transform.scale *= 15.0f;
 
-  maple = Model(getAsset("maple\\scene.gltf"), program.location, treeMat);
+  maple = Model(getAsset("maple/scene.gltf"), program.location, treeMat);
   maple.transform.position = glm::vec3(180.0f, -5.0f, 300.0f);
   maple.transform.scale *= 1.0f;
 
@@ -325,11 +366,11 @@ void init()
   glassMat.shininess = 128.0f;
   glassMat.alpha = 0.3f;
 
-  glass = Model(getAsset("glass\\scene.gltf"), program.location, glassMat);
+  glass = Model(getAsset("glass/scene.gltf"), program.location, glassMat);
   glass.transform.position = glm::vec3(50.0f, 3.0f, 20.0f);
   glass.transform.scale *= 100.0f;
 
-  glass2 = Model(getAsset("glass2\\scene.gltf"), program.location, glassMat);
+  glass2 = Model(getAsset("glass2/scene.gltf"), program.location, glassMat);
   glass2.transform.position = glm::vec3(10.0f, 5.0f, 20.0f);
   glass2.transform.scale *= 5.0f;
 
@@ -339,25 +380,25 @@ void init()
   transparent.push_back(&glass);
   transparent.push_back(&glass2);
 
-  setupSimpleMesh();
+  fogTexture = loadSRGBTexture(getAsset("fog/smoke4.jpg"));
 
-  fogTexture = loadSRGBTexture(getAsset( "fog\\smoke4.jpg"));
+  GL_CHECK_ERROR();
+  water = Water(glm::vec3(500.0f, 3.0f, -100.0f), 120.0f, getAsset("water/pool.jpg"));
 
-  water = Water(glm::vec3(500.0f, 3.0f, -100.0f), 120.0f, getAsset("water\\pool.jpg"));
-
+  GL_CHECK_ERROR();
   std::vector<std::string> faces = {
       "rt", "lf", "up", "dn", "bk", "ft",
   };
-  skybox = Skybox(getAsset("skybox\\s1_"), faces);
-  skybox2 = Skybox(getAsset("skybox\\s2_"), faces);
+  skybox = Skybox(getAsset("skybox/s1_"), faces);
+  skybox2 = Skybox(getAsset("skybox/s2_"), faces);
 
-  ground =
-      Ground(10000.0f, 1, 40, program.location, getAsset("ground\\textures\\forest_ground_04_diff_4k.jpg"),
-            getAsset("rocks\\textures\\coast_sand_rocks_02_diff_4k.jpg"));
+  ground = Ground(10000.0f, 1, 40, program.location,
+                  getAsset("ground/textures/forest_ground_04_diff_4k.jpg"),
+                  getAsset("rocks/textures/coast_sand_rocks_02_diff_4k.jpg"));
 
   setupLights();
+  GL_CHECK_ERROR();
 }
-
 
 void drawSkybox(const Skybox& currentSkybox)
 {
@@ -417,7 +458,7 @@ void draw()
   glm::mat4 model = glm::mat4(1.0f);
   glm::mat4 PV = camera->calculatePV();
 
-  bool isDay = (((uint32_t)(1000 *glfwGetTime()) % DAY_DURATION) < (DAY_DURATION / 2));
+  bool isDay = (((uint32_t)(1000 * glfwGetTime()) % DAY_DURATION) < (DAY_DURATION / 2));
   if (isDay)
   {
     drawSkybox(skybox);
@@ -426,7 +467,6 @@ void draw()
   {
     drawSkybox(skybox2);
   }
-
 
   glEnable(GL_STENCIL_TEST);
   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -584,11 +624,15 @@ void draw()
   }
 }
 
-void onMouse(int x, int y)
+bool movedMouse = false;
+double mouseX, mouseY;
+void onMouse(GLFWwindow* window, double x, double y)
 {
   if (freeView)
   {
-    camera->processMouse(x, y);
+    movedMouse = true;
+    mouseX = x;
+    mouseY = y;
   }
 }
 
@@ -658,52 +702,45 @@ void ExitProgram()
 }
 
 // handels all keyboard input
-void processInput()
+void processInput(GLFWwindow* window)
 {
-  if (specialKeyTable[GLUT_KEY_F1])
+  if (glfwGetKey(window, GLFW_KEY_F1))
   {
     camera = &freeCamera;
     freeView = true;
-    specialKeyTable[GLUT_KEY_F1] = false;
   }
-  if (specialKeyTable[GLUT_KEY_F2])
+  if (glfwGetKey(window, GLFW_KEY_F2))
   {
     camera = &statCamera1;
     freeView = false;
-    specialKeyTable[GLUT_KEY_F2] = false;
   }
-  if (specialKeyTable[GLUT_KEY_F3])
+  if (glfwGetKey(window, GLFW_KEY_F3))
   {
     camera = &statCamera2;
     freeView = false;
-    specialKeyTable[GLUT_KEY_F3] = false;
   }
-  if (specialKeyTable[GLUT_KEY_F4])
+  if (glfwGetKey(window, GLFW_KEY_F4))
   {
     camera = &dynCamera1;
     freeView = false;
-    specialKeyTable[GLUT_KEY_F4] = false;
   }
-  if (specialKeyTable[GLUT_KEY_F5])
+  if (glfwGetKey(window, GLFW_KEY_F5))
   {
     camera = &dynCamera2;
     freeView = false;
-    specialKeyTable[GLUT_KEY_F5] = false;
   }
 
-  const int ESCAPE = 27;
-  if (keyTable['q'] || keyTable[ESCAPE])
+  if (glfwGetKey(window, GLFW_KEY_Q) || glfwGetKey(window, GLFW_KEY_ESCAPE))
   {
     ExitProgram();
   }
 
-  if (keyTable['g'])
+  if (glfwGetKey(window, GLFW_KEY_G))
   {
     fogOn = !fogOn;
-    keyTable['g'] = false;
   }
 
-  if (keyTable['v'])
+  if (glfwGetKey(window, GLFW_KEY_V))
   {
     std::vector<Transform*> trans;
     trans.push_back(&bin.transform);
@@ -711,48 +748,49 @@ void processInput()
     trans.push_back(&house.transform);
     trans.push_back(&arcade.transform);
     trans.push_back(&rock2.transform);
-    loadConfig(getAsset("\\config.txt"), trans);
+    loadConfig(getAsset("config.txt"), trans);
   }
 
-  const int CTRL_E = 5;
-  if (keyTable[CTRL_E])
-  {
-    std::cout << "Bike is at: ( " << bike.transform.position.x << ", " << bike.transform.position.y
-              << ", " << bike.transform.position.z << " )\n";
-    keyTable[CTRL_E] = false;
-  }
+  // const int CTRL_E = 5;
+  // if (keyTable[CTRL_E])
+  //{
+  //   std::cout << "Bike is at: ( " << bike.transform.position.x << ", " <<
+  //   bike.transform.position.y
+  //             << ", " << bike.transform.position.z << " )\n";
+  //   keyTable[CTRL_E] = false;
+  // }
 
   if (freeView)
   {
     glm::vec3 oldPos = freeCamera.postion;
     bool moved = false;
 
-    if (keyTable['w'])
+    if (glfwGetKey(window, GLFW_KEY_W))
     {
       freeCamera.processKeyboard('w');
       moved = true;
     }
-    if (keyTable['s'])
+    if (glfwGetKey(window, GLFW_KEY_S))
     {
       freeCamera.processKeyboard('s');
       moved = true;
     }
-    if (keyTable['a'])
+    if (glfwGetKey(window, GLFW_KEY_A))
     {
       freeCamera.processKeyboard('a');
       moved = true;
     }
-    if (keyTable['d'])
+    if (glfwGetKey(window, GLFW_KEY_D))
     {
       freeCamera.processKeyboard('d');
       moved = true;
     }
-    if (keyTable['x'])
+    if (glfwGetKey(window, GLFW_KEY_X))
     {
       freeCamera.processKeyboard('x');
       moved = true;
     }
-    if (keyTable['z'])
+    if (glfwGetKey(window, GLFW_KEY_Z))
     {
       freeCamera.processKeyboard('z');
       moved = true;
@@ -770,20 +808,9 @@ void processInput()
   }
 }
 
-void onKeyboard(unsigned char key, int x, int y)
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int _)
 {
-  keyTable[key] = true;
-}
-void onSpecialKeys(int key, int x, int y)
-{
-  if (key >= 0 && key < 512)
-  {
-    specialKeyTable[key] = true;
-  }
-}
-void onMouseClick(int button, int state, int x, int y)
-{
-  if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+  if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
   {
     if (freeView)
     {
@@ -791,32 +818,19 @@ void onMouseClick(int button, int state, int x, int y)
     }
   }
 
-  if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+  if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
   {
+    mouseLook = !mouseLook;
+    freeView = !freeView;
+
     if (mouseLook)
     {
-      glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else
     {
-      glutSetCursor(GLUT_CURSOR_NONE);
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-
-    mouseLook = !mouseLook;
-    freeView = !freeView;
-  }
-}
-
-void onKeyboardUp(unsigned char key, int x, int y)
-{
-  keyTable[key] = false;
-}
-
-void onSpecialKeysUp(int key, int x, int y)
-{
-  if (key >= 0 && key < 512)
-  {
-    specialKeyTable[key] = false;
   }
 }
 
@@ -824,7 +838,7 @@ void onSpecialKeysUp(int key, int x, int y)
 
 int main(int argc, char** argv)
 {
-  if (!glfwInit())
+  if (glfwInit() == 0)
   {
     std::cerr << "Failed to initialize GLFW\n";
     return -1;
@@ -840,9 +854,10 @@ int main(int argc, char** argv)
 
   glfwWindowHint(GLFW_SAMPLES, 4);
 
-  GLFWwindow* window = glfwCreateWindow(skrivrom::WIN_WIDTH, skrivrom::WIN_HEIGHT, skrivrom::WIN_TITLE, nullptr, nullptr);
-
-  if (!window)
+  GLFWwindow* window = glfwCreateWindow(static_cast<int>(skrivrom::WIN_WIDTH),
+                                        static_cast<int>(skrivrom::WIN_HEIGHT), skrivrom::WIN_TITLE,
+                                        nullptr, nullptr);
+  if (window == nullptr)
   {
     std::cerr << "Failed to create window\n";
     glfwTerminate();
@@ -859,20 +874,37 @@ int main(int argc, char** argv)
 
   glfwSwapInterval(1);
 
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetFramebufferSizeCallback(window, skrivrom::reshape);
   glfwSetCursorPosCallback(window, skrivrom::onMouse);
-  glfwSetMouseButtonCallback(window, skrivrom::onMouseClick);
-  glfwSetKeyCallback(window, skrivrom::onKeyboard);
+  glfwSetMouseButtonCallback(window, skrivrom::mouseButtonCallback);
+  // glfwSetKeyCallback(window, skrivrom::onKeyboard);
 
   skrivrom::init();
+
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
   glViewport(0, 0, width, height);
 
   std::cout << "Starting render loop!" << std::endl;
 
+  auto lastTime = std::chrono::high_resolution_clock::now();
+  float deltaTime = 0.0f;
   while (!glfwWindowShouldClose(window))
   {
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> diff = currentTime - lastTime;
+    deltaTime = diff.count();
+    lastTime = currentTime;
+
+    if (skrivrom::movedMouse)
+    {
+      skrivrom::camera->processMouse(window, skrivrom::mouseX, skrivrom::mouseY, deltaTime);
+      skrivrom::movedMouse = false;
+    }
+
+    skrivrom::processInput(window);
+    skrivrom::update(deltaTime);
     skrivrom::draw();
 
     glfwSwapBuffers(window);

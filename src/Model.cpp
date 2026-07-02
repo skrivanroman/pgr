@@ -1,6 +1,7 @@
 #include "Model.hpp"
 
 #include <iostream>
+
 #include "utils.hpp"
 
 namespace skrivrom
@@ -15,7 +16,7 @@ void Model::loadFromFile(const std::string& path, const Location& location)
                         // aiProcess_CalcTangentSpace
       );
 
-  directory = path.substr(0, path.find_last_of('\\'));
+  directory = path.substr(0, path.find_last_of('/'));
 
   if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
   {
@@ -146,7 +147,7 @@ Mesh Model::processMesh(const aiMesh* mesh, const aiScene* scene, const Location
     aiString name;
 
     aiReturn texFound = assimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &name);
-    std::string texturePath = directory + '\\' + name.data;
+    std::string texturePath = directory + '/' + name.data;
 
     bool alreadyLoaded = false;
     for (const auto& tex : textures)

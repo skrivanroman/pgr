@@ -8,9 +8,8 @@ Checks: >
   readability-*,
   -modernize-use-trailing-return-type,
   -cppcoreguidelines-avoid-magic-numbers,
-  
-  # Specific checks you mentioned
-  cppcoreguidelines-pro-type-cstyle-cast,  # Warn on C-style casts
+  -readability-uppercase-literal-suffix,  
+  cppcoreguidelines-pro-type-cstyle-cast,
   cppcoreguidelines-pro-type-union-access,
   cppcoreguidelines-no-malloc,
 
